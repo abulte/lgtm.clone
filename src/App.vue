@@ -7,6 +7,9 @@
         ![]({{ image.images.fixed_height.url }})
       </pre>
     </div>
+    <footer>
+      {{ this.query }}({{ this.offset }})
+    </footer>
   </div>
 </template>
 
@@ -23,10 +26,14 @@ export default {
       images: [],
       limit: 8,
       // what giphy has to offer
-      maxResults: 50
+      maxResults: 50,
+      searches: ['okay', 'lgtm', 'ok', 'clap clap']
     }
   },
   computed: {
+    query () {
+      return this.searches[this.getRandomInt(this.searches.length)]
+    },
     offset () {
       return this.page * this.limit
     },
@@ -44,8 +51,7 @@ export default {
   },
   mounted () {
     const api_key = '0aqJyd4OFUcq2tZ3tgAvDSC02DnEBgds'
-    const q =  'lgtm'
-    this.$http.get(`https://api.giphy.com/v1/gifs/search?api_key=${api_key}&q=${q}&offset=${this.offset}&limit=${this.limit}`).then(res => {
+    this.$http.get(`https://api.giphy.com/v1/gifs/search?api_key=${api_key}&q=${this.query}&offset=${this.offset}&limit=${this.limit}`).then(res => {
       return res.json()
     }).then(res => {
       this.images = this.shuffle(res.data)
